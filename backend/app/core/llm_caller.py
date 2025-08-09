@@ -117,15 +117,34 @@ class LLMCaller:
                     timeout=self.config.timeout
                 )
                 
-                response = client.chat.completions.create(
-                    model=self.config.llm_model,
-                    messages=[
+                # 构建请求体
+                request_data = {
+                    "model": self.config.llm_model,
+                    "messages": [
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=0.1,  # 低温度确保一致性
-                )
+                    "temperature": 0.1
+                }
                 
-                return response.choices[0].message.content.strip()
+                # 记录请求详情
+                logger.info(f"=== LLM请求开始 ===")
+                logger.info(f"提供商: {self.config.llm_provider}")
+                logger.info(f"模型: {self.config.llm_model}")
+                logger.info(f"API地址: {base_url}")
+                logger.info(f"请求体: {request_data}")
+                logger.info(f"提示词内容:\n{prompt}")
+                logger.info(f"=== LLM请求结束 ===")
+                
+                response = client.chat.completions.create(**request_data)
+                
+                # 记录响应详情
+                response_content = response.choices[0].message.content.strip()
+                logger.info(f"=== LLM响应开始 ===")
+                logger.info(f"响应状态: 成功")
+                logger.info(f"响应内容:\n{response_content}")
+                logger.info(f"=== LLM响应结束 ===")
+                
+                return response_content
             
             else:
                 # 对于其他提供商，也尝试使用OpenAI兼容格式
@@ -138,15 +157,34 @@ class LLMCaller:
                     timeout=self.config.timeout
                 )
                 
-                response = client.chat.completions.create(
-                    model=self.config.llm_model,
-                    messages=[
+                # 构建请求体
+                request_data = {
+                    "model": self.config.llm_model,
+                    "messages": [
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=0.1,
-                )
+                    "temperature": 0.1
+                }
                 
-                return response.choices[0].message.content.strip()
+                # 记录请求详情
+                logger.info(f"=== LLM请求开始 ===")
+                logger.info(f"提供商: {self.config.llm_provider}")
+                logger.info(f"模型: {self.config.llm_model}")
+                logger.info(f"API地址: {self.config.api_base_url}")
+                logger.info(f"请求体: {request_data}")
+                logger.info(f"提示词内容:\n{prompt}")
+                logger.info(f"=== LLM请求结束 ===")
+                
+                response = client.chat.completions.create(**request_data)
+                
+                # 记录响应详情
+                response_content = response.choices[0].message.content.strip()
+                logger.info(f"=== LLM响应开始 ===")
+                logger.info(f"响应状态: 成功")
+                logger.info(f"响应内容:\n{response_content}")
+                logger.info(f"=== LLM响应结束 ===")
+                
+                return response_content
                 
         except Exception as e:
             # 检查是否是速率限制错误

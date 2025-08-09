@@ -32,12 +32,7 @@ const { Title, Text, Paragraph } = Typography;
 const ProcessingPanel = ({ file, config, previewData }) => {
   const [processing, setProcessing] = useState(false);
   const [result, setResult] = useState(null);
-  const [progress, setProgress] = useState({
-    percent: 0,
-    status: 'normal',
-    current: 0,
-    total: 0
-  });
+  const [processingLogs, setProcessingLogs] = useState([]);
 
   // 开始处理
   const handleStartProcessing = async () => {
@@ -58,42 +53,30 @@ const ProcessingPanel = ({ file, config, previewData }) => {
 
     setProcessing(true);
     setResult(null);
-    setProgress({ percent: 0, status: 'active', current: 0, total: 0 });
+    setProcessingLogs([]);
 
     try {
-      // 估算处理进度（简单模拟）
-      const estimatedChunks = Math.ceil((previewData?.file_info?.rows || 100) / config.chunk_size);
-      setProgress(prev => ({ ...prev, total: estimatedChunks }));
-
-      // 模拟进度更新
-      const progressInterval = setInterval(() => {
-        setProgress(prev => {
-          if (prev.current < prev.total - 1) {
-            const newCurrent = prev.current + 1;
-            const newPercent = Math.round((newCurrent / prev.total) * 90); // 90%之前模拟
-            return {
-              ...prev,
-              current: newCurrent,
-              percent: newPercent
-            };
-          }
-          return prev;
-        });
-      }, 2000);
+      // 添加开始处理日志
+      setProcessingLogs([
+        { 
+          id: Date.now(), 
+          type: 'info', 
+          message: '开始处理CSV文件...', 
+          timestamp: new Date().toLocaleTimeString() 
+        }
+      ]);
 
       // 调用处理API
       const response = await processCSV(file, config);
 
-      // 清除进度模拟
-      clearInterval(progressInterval);
-
       if (response.success) {
-        setProgress({
-          percent: 100,
-          status: 'success',
-          current: response.total_chunks,
-          total: response.total_chunks
-        });
+        // 添加成功日志
+        setProcessingLogs(prev => [...prev, {
+          id: Date.now() + 1,
+          type: 'success',
+          message: `处理完成！总共处理了${response.total_chunks}个分块，成功${response.processed_chunks}个`,
+          timestamp: new Date().toLocaleTimeString()
+        }]);
         
         setResult({
           ...response,
@@ -102,12 +85,13 @@ const ProcessingPanel = ({ file, config, previewData }) => {
         
         message.success('CSV处理完成！');
       } else {
-        setProgress({
-          percent: 100,
-          status: 'exception',
-          current: response.processed_chunks || 0,
-          total: response.total_chunks || 0
-        });
+        // 添加失败日志
+        setProcessingLogs(prev => [...prev, {
+          id: Date.now() + 1,
+          type: 'error',
+          message: `处理失败: ${response.message}`,
+          timestamp: new Date().toLocaleTimeString()
+        }]);
         
         setResult({
           ...response,
@@ -120,12 +104,13 @@ const ProcessingPanel = ({ file, config, previewData }) => {
     } catch (error) {
       console.error('处理失败:', error);
       
-      setProgress({
-        percent: 100,
-        status: 'exception',
-        current: 0,
-        total: 0
-      });
+      // 添加错误日志
+      setProcessingLogs(prev => [...prev, {
+        id: Date.now() + 2,
+        type: 'error',
+        message: `处理出错: ${error.message}`,
+        timestamp: new Date().toLocaleTimeString()
+      }]);
       
       setResult({
         success: false,
@@ -169,7 +154,7 @@ const ProcessingPanel = ({ file, config, previewData }) => {
   // 重新处理
   const handleReprocess = () => {
     setResult(null);
-    setProgress({ percent: 0, status: 'normal', current: 0, total: 0 });
+    setProcessingLogs([]);
   };
 
   // 验证是否可以开始处理
@@ -221,32 +206,44 @@ const ProcessingPanel = ({ file, config, previewData }) => {
         </Button>
       )}
 
-      {/* 处理中的进度显示 */}
-      {processing && (
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
-            <Spin size="small" style={{ marginRight: 8 }} />
-            <Text strong>正在处理中...</Text>
+      {/* 处理中的日志显示 */}
+      {(processing || processingLogs.length > 0) && (
+        <Card
+          title={
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              {processing && <Spin size="small" style={{ marginRight: 8 }} />}
+              <Text strong>处理日志</Text>
+            </div>
+          }
+          size="small"
+          style={{ marginBottom: 16 }}
+        >
+          <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+            {processingLogs.map(log => (
+              <div key={log.id} style={{ marginBottom: 8, padding: 8, background: '#f5f5f5', borderRadius: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Text 
+                    type={log.type === 'error' ? 'danger' : log.type === 'success' ? 'success' : 'secondary'}
+                    style={{ fontSize: '12px' }}
+                  >
+                    [{log.timestamp}]
+                  </Text>
+                  <Text 
+                    type={log.type === 'error' ? 'danger' : log.type === 'success' ? 'success' : undefined}
+                  >
+                    {log.message}
+                  </Text>
+                </div>
+              </div>
+            ))}
+            {processing && (
+              <div style={{ textAlign: 'center', padding: 16 }}>
+                <Spin />
+                <Text style={{ marginLeft: 8 }}>正在与大语言模型对话...</Text>
+              </div>
+            )}
           </div>
-          
-          <Progress
-            percent={progress.percent}
-            status={progress.status}
-            strokeColor={{
-              '0%': '#108ee9',
-              '100%': '#52c41a',
-            }}
-          />
-          
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-            <Text type="secondary">
-              进度: {progress.current} / {progress.total} 块
-            </Text>
-            <Text type="secondary">
-              {progress.percent}%
-            </Text>
-          </div>
-        </div>
+        </Card>
       )}
 
       {/* 处理结果显示 */}
