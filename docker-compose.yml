@@ -1,0 +1,71 @@
+# CSV大模型处理引擎 Docker Compose配置
+
+version: '3.8'
+
+services:
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: csv-processor-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./backend/logs:/app/logs
+      - /tmp:/tmp  # 用于临时文件存储
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - csv-processor-network
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: csv-processor-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=/api/v1
+    networks:
+      - csv-processor-network
+
+  # Nginx负载均衡器(可选)
+  nginx:
+    image: nginx:alpine
+    container_name: csv-processor-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - csv-processor-network
+    profiles:
+      - production  # 只在生产环境启用
+
+networks:
+  csv-processor-network:
+    driver: bridge
+    name: csv-processor-network
+
+volumes:
+  backend_logs:
+    driver: local

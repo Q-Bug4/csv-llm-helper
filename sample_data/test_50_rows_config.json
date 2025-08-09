@@ -1,0 +1,36 @@
+{
+  "chunk_size": 10,
+  "processing_logic": "请分析每个财务问题并进行以下分类：1) 问题类型：将问题分类为'同比分析'、'占比分析'、'趋势分析'、'对比分析'、'其他'之一；2) 财务领域：识别问题涉及的财务领域，如'收入'、'成本'、'利润'、'现金流'、'资产'、'负债'、'比率分析'等；3) 时间范围：提取问题中涉及的时间信息，如'2023年'、'Q1'、'近三年'、'年度'等；4) 优先级评估：根据问题的重要性和紧急程度，评估为'高'、'中'、'低'三个级别。",
+  "output_schema": [
+    {
+      "name": "question_id",
+      "description": "原始数据中的问题编号"
+    },
+    {
+      "name": "question_type",
+      "description": "问题类型：同比分析、占比分析、趋势分析、对比分析、其他"
+    },
+    {
+      "name": "financial_domain",
+      "description": "财务领域：收入、成本、利润、现金流、资产、负债、比率分析等"
+    },
+    {
+      "name": "time_scope",
+      "description": "时间范围：提取的具体时间信息"
+    },
+    {
+      "name": "ai_priority",
+      "description": "AI评估的优先级：高、中、低"
+    },
+    {
+      "name": "department",
+      "description": "提问部门"
+    }
+  ],
+  "llm_provider": "openai",
+  "llm_model": "gpt-3.5-turbo",
+  "api_key": "your-openai-api-key-here",
+  "api_base_url": "",
+  "max_retries": 3,
+  "timeout": 30
+}

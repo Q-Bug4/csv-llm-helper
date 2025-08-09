@@ -1,0 +1,16 @@
+{
+  "short_name": "CSV处理引擎",
+  "name": "CSV大模型处理引擎",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1890ff",
+  "background_color": "#ffffff",
+  "description": "基于大语言模型的通用CSV数据处理平台"
+}

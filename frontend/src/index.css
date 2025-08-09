@@ -1,0 +1,165 @@
+/* 全局样式 */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* 布局样式 */
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.main-content {
+  padding: 24px;
+  min-height: calc(100vh - 48px);
+}
+
+.content-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* 表单样式增强 */
+.form-section {
+  margin-bottom: 24px;
+}
+
+.form-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #262626;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 8px;
+}
+
+/* 文件上传区域样式 */
+.upload-area {
+  border: 2px dashed #d9d9d9;
+  border-radius: 6px;
+  background: #fafafa;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #1890ff;
+  background: #f0f7ff;
+}
+
+.upload-area.active {
+  border-color: #1890ff;
+  background: #e6f7ff;
+}
+
+/* 进度条样式 */
+.progress-container {
+  margin-top: 16px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 结果展示样式 */
+.result-container {
+  margin-top: 24px;
+}
+
+.result-success {
+  border: 1px solid #52c41a;
+  background: #f6ffed;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.result-error {
+  border: 1px solid #ff4d4f;
+  background: #fff2f0;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+/* 配置项样式 */
+.config-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.schema-item {
+  background: #f9f9f9;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.schema-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px;
+  }
+  
+  .config-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 动画效果 */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

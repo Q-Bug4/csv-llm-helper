@@ -1,0 +1,24 @@
+{
+  "chunk_size": 5,
+  "processing_logic": "请将每条用户问题分类为'同比分析'、'占比分析'、'趋势分析'、'其他'之一。如果是同比分析，请提取涉及的年份区间（如2023-2024）；如果是占比分析，请提取涉及的指标名称；如果是趋势分析，请提取时间范围；否则留空。",
+  "output_schema": [
+    {
+      "name": "question_id",
+      "description": "原始数据中的问题编号"
+    },
+    {
+      "name": "category",
+      "description": "问题类型：同比分析、占比分析、趋势分析、其他"
+    },
+    {
+      "name": "extra_info",
+      "description": "针对同比分析提取年份区间，针对占比分析提取指标名称，针对趋势分析提取时间范围，其他类型为空"
+    }
+  ],
+  "llm_provider": "openai",
+  "llm_model": "gpt-3.5-turbo",
+  "api_key": "your-openai-api-key-here",
+  "api_base_url": "",
+  "max_retries": 3,
+  "timeout": 30
+}

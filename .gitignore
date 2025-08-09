@@ -1,0 +1,114 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+*.log
+
+# Node/React
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+coverage/
+build/
+dist/
+.next/
+out/
+.cache/
+.parcel-cache/
+
+# Docker
+.docker/
+docker-compose.override.yml
+*.env
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+out/
+
+# Other IDEs and Editors
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.sublime-workspace
+.sublime-project
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Coverage and test reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Local development configuration
+.env.*
+!.env.example
